@@ -1,0 +1,22 @@
+{
+  "name": "notetakerhw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/runaariga/notetakerhw.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/runaariga/notetakerhw/issues"
+  },
+  "homepage": "https://github.com/runaariga/notetakerhw#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

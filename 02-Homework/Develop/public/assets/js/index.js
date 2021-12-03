@@ -56,7 +56,7 @@ const renderActiveNote = () => {
   if (activeNote.id) {
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
-    noteTitle.value = activeNote.title;
+    //noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
   } else {
     noteTitle.removeAttribute('readonly');
