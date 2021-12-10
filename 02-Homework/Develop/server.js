@@ -1,83 +1,47 @@
+const express = require('express');
+const bodyParser = require('body-parser');
 
+let note = [{ id: 1, body: 'We have a text' }, { id: 2, body: 'This is a second text' }];
 
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const database = require("./db/db")
+//call the express and Body-parser
+const app = express();
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-var app = express();
-var PORT = process.env.PORT || 3000;
-
-
+//serving static files
 app.use(express.static('public'));
+//we installed the ejs and created a file inside the views
+app.set('view engine', 'ejs');
 
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "/public/index.html"));
+//We set up the route for the App. We first use the app.get option.
+app.get('/', function (req, res) {
+  res.render('notes', {
+    note: note
+  });
 });
 
-app.get("/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "/public/notes.html"));
-})
-
-
-app.route("/api/notes")
-    .get(function (req, res) {
-        res.json(database);
-    })
-
-    .post(function (req, res) {
-        let jsonFilePath = path.join(__dirname, "/db/db.json");
-        let newNote = req.body;
-
-        let highestId = 99;
-        for (let i = 0; i < database.length; i++) {
-            let individualNote = database[i];
-
-            if (individualNote.id > highestId) {
-                highestId = individualNote.id;
-            }
-        }
-        newNote.id = highestId + 1;
-        database.push(newNote)
-
-        fs.writeFile(jsonFilePath, JSON.stringify(database), function (err) {
-
-            if (err) {
-                return console.log(err);
-            }
-            console.log("Your note was saved!");
-        });
-        res.json(newNote);
-    });
-
-
-
-app.delete("/api/notes/:id", function (req, res) {
-    let jsonFilePath = path.join(__dirname, "/db/db.json");
-    for (let i = 0; i < database.length; i++) {
-
-        if (database[i].id == req.params.id) {
-            database.splice(i, 1);
-            break;
-        }
-    }
-    fs.writeFileSync(jsonFilePath, JSON.stringify(database), function (err) {
-
-        if (err) {
-            return console.log(err);
-        } else {
-            console.log("Your note was deleted!");
-        }
-    });
-    res.json(database);
+//then, we use app.post option.
+app.post("/addNotes", function (req, res) {
+  //assigning Note id to the notes using math.random
+  const userNote = {};
+  userNote.id = Math.random() * 100;
+  userNote.body = req.body.newNote
+  note.push(userNote);
+  //then we redirect it to the root route
+  res.redirect('/');
 });
 
+//Handling the delete request
 
-app.listen(PORT, function () {
-    console.log("App listening on PORT " + PORT);
+app.post('/deleteNote/:id', function (req, res) {
+  console.log(req.params.id);
+  const deleteNotes = note.filter(item => item.id != req.params.id);
+  note = deleteNotes;
+  return res.redirect('/');
+});
+
+//then we set our server port. This should always be at bottom.
+app.listen(5000, function () {
+  console.log("NoteApp server is running at port 5000...")
 });
