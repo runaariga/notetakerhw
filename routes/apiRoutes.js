@@ -14,7 +14,20 @@ router.get('/notes', (req, res) => {
 });
 
 router.post('/notes', (req, res) => {
-    writeFileAsync('')
+    //writeFileAsync('')
+    console.log(req.body,"payload")
+    const data = fs.readFileSync('./db/db.json','utf-8')
+    const parsedata = JSON.parse(data)
+    parsedata.push(req.body)
+    fs.writeFileSync('./db/db.json',JSON.stringify(parsedata))
+    res.send('good')
+
+    //when creating notes, also add a ID attribute and it has to be unique
+})
+
+router.delete('/notes/:id', (req, res) => {
+    console.log("noteid", req.params.id)
+    
 })
 
 module.exports = router;
